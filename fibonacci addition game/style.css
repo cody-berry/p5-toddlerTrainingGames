@@ -1,0 +1,176 @@
+:root {
+  color-scheme: dark;
+  --cell: clamp(52px, 9vw, 84px);
+  --gap: clamp(3px, 1vw, 10px);
+  --white: #f7f7f2;
+  --muted: #7d7d78;
+  --active: #ffd84d;
+  --carry: #70d6ff;
+  --success: #8cff98;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: auto;
+  background: #000;
+  color: var(--white);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+.timer {
+  position: fixed;
+  top: clamp(18px, 4vw, 40px);
+  right: clamp(18px, 4vw, 40px);
+  z-index: 2;
+  min-width: 2.4ch;
+  color: var(--white);
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 700;
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer.low { color: #ff595e; }
+.timer.bump { animation: timer-bump 260ms ease-out; }
+
+.game {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  padding: 24px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: auto 88px;
+  gap: 10px 12px;
+  align-items: center;
+  margin-bottom: 28px;
+  color: var(--muted);
+  font: 600 14px/1.2 system-ui, sans-serif;
+}
+
+.controls input,
+.controls button {
+  height: 38px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: #111;
+  color: var(--white);
+  font: 700 15px/1 system-ui, sans-serif;
+}
+
+.controls input { width: 88px; padding: 0 10px; }
+.buttons {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.controls button { padding: 0 20px; cursor: pointer; }
+.controls button:hover { border-color: #aaa; background: #1b1b1b; }
+.controls button:focus-visible,
+.controls input:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+
+h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.instruction {
+  margin: 0 0 28px;
+  color: var(--muted);
+  font: 600 clamp(14px, 2vw, 18px)/1.2 system-ui, sans-serif;
+  letter-spacing: .04em;
+}
+
+.addition { position: relative; }
+
+.number-grid {
+  display: grid;
+  grid-template-columns: var(--cell) repeat(var(--digits), var(--cell));
+  gap: var(--gap);
+  align-items: center;
+}
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: clamp(42px, 8vw, 72px);
+  font-weight: 700;
+  line-height: 1;
+  transition: color 180ms ease, opacity 420ms ease, transform 420ms cubic-bezier(.22,.8,.28,1);
+}
+
+.digit { color: var(--white); }
+
+.operator { color: var(--white); }
+.carry {
+  height: 40px;
+  color: var(--carry);
+  font-size: clamp(20px, 4vw, 32px);
+}
+
+.line {
+  height: 4px;
+  align-self: center;
+  background: var(--white);
+  border-radius: 3px;
+}
+
+.result { color: var(--white); }
+.result.pending { color: transparent; }
+.result.just-added { animation: pop 300ms ease-out; }
+.addition.advance .operand-0 { opacity: 0; }
+.addition.advance .operand:not(.operand-0) {
+  transform: translateY(calc(-1 * (var(--cell) + var(--gap))));
+}
+.addition.advance .result {
+  transform: translateY(calc(-1 * (var(--cell) + 8px + (2 * var(--gap)))));
+}
+
+.hint, .feedback {
+  font-family: system-ui, sans-serif;
+  font-weight: 600;
+  text-align: center;
+}
+
+.hint { margin: 26px 0 0; color: var(--muted); font-size: 14px; }
+.feedback { height: 24px; margin: 12px 0 0; color: var(--success); }
+.feedback.error { color: #ff595e; }
+.typed { color: var(--white); }
+
+.shake { animation: shake 420ms ease-in-out; }
+.celebrate .result { color: var(--success); }
+
+@keyframes pop {
+  0% { transform: scale(.3); opacity: 0; }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15%, 45%, 75% { transform: translateX(-14px); }
+  30%, 60%, 90% { transform: translateX(14px); }
+}
+
+@keyframes timer-bump {
+  50% { transform: scale(1.2); color: var(--success); }
+}
+
+@media (max-width: 520px) {
+  :root { --cell: clamp(42px, 16vw, 68px); --gap: 2px; }
+  .game { padding: 12px; }
+}

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fibonacci Addition Game</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="timer" id="timer" aria-live="polite" aria-label="Time remaining">60</div>
+    <main class="game" aria-labelledby="title">
+      <h1 id="title">Fibonacci Addition</h1>
+      <div class="controls">
+        <label for="startingCount">Starting numbers</label>
+        <input id="startingCount" type="number" min="2" step="1" value="2" inputmode="numeric" />
+        <div class="buttons">
+          <button id="startStop" type="button">Start</button>
+          <button id="reset" type="button">Reset</button>
+        </div>
+      </div>
+
+      <p class="instruction" id="instruction">Choose how many numbers, then press Start</p>
+
+      <section class="addition" id="addition" aria-label="Addition problem">
+        <div class="number-grid" id="numberGrid"></div>
+      </section>
+
+      <p class="hint">Type the answer, then press Enter</p>
+      <p class="feedback" id="feedback" aria-live="assertive"></p>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
