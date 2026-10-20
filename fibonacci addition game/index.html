@@ -7,10 +7,46 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="timer" id="timer" aria-live="polite" aria-label="Time remaining">60</div>
+    <aside class="time-hud" aria-label="Game timers">
+      <div class="stopwatch" id="stopwatch" aria-live="off" aria-label="Elapsed time">00:00</div>
+      <div class="milkshake" id="milkshake" aria-hidden="true">
+        <div class="straw"></div>
+        <div class="shake-glass">
+          <span class="pitcher-ellipse pitcher-top-back"></span>
+          <span class="pitcher-ellipse pitcher-bottom-back"></span>
+          <div class="shake-fill" id="shakeFill">
+            <span class="shake-body"></span>
+            <span class="fill-surface-front"></span>
+          </div>
+          <span class="bubble bubble-one"></span>
+          <span class="bubble bubble-two"></span>
+          <span class="bubble bubble-three"></span>
+          <span class="bubble bubble-four"></span>
+          <span class="bubble bubble-five"></span>
+          <span class="bubble bubble-six"></span>
+          <span class="bubble bubble-seven"></span>
+          <span class="bubble bubble-eight"></span>
+          <span class="bubble bubble-nine"></span>
+          <span class="bubble bubble-ten"></span>
+          <span class="bubble bubble-eleven"></span>
+          <span class="bubble bubble-twelve"></span>
+          <div class="pitcher-walls"></div>
+          <span class="pitcher-ellipse pitcher-top-front"></span>
+          <span class="pitcher-ellipse pitcher-bottom-front"></span>
+        </div>
+      </div>
+      <div class="countdown" id="timer" aria-live="polite" aria-label="Milkshake time remaining">60</div>
+    </aside>
     <main class="game" aria-labelledby="title">
       <h1 id="title">Fibonacci Addition</h1>
       <div class="controls">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+          <option value="supreme">Supreme</option>
+        </select>
         <label for="startingCount">Starting numbers</label>
         <input id="startingCount" type="number" min="2" step="1" value="2" inputmode="numeric" />
         <div class="buttons">

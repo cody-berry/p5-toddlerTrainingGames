@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Greater Than or Less Than Test</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <button id="nextPattern" type="button">Next pattern</button>
+
+      <div class="pattern" aria-label="Comparison pattern">
+        <span id="numberOne"></span>
+        <span>is</span>
+        <label class="visually-hidden" for="comparison">Choose a comparison</label>
+        <select id="comparison">
+          <option value="" selected disabled>choose…</option>
+          <option value="greater-than">greater than</option>
+          <option value="less-than">less than</option>
+          <option value="equal-to">equal to</option>
+        </select>
+        <span id="numberTwo"></span>
+      </div>
+
+      <p id="feedback" aria-live="polite"></p>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
