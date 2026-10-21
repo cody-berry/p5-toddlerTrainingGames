@@ -13,13 +13,12 @@
       <div class="pattern" aria-label="Comparison pattern">
         <span id="numberOne"></span>
         <span>is</span>
-        <label class="visually-hidden" for="comparison">Choose a comparison</label>
-        <select id="comparison">
-          <option value="" selected disabled>choose…</option>
-          <option value="greater-than">greater than</option>
-          <option value="less-than">less than</option>
-          <option value="equal-to">equal to</option>
-        </select>
+        <fieldset class="choices">
+          <legend class="visually-hidden">Choose a comparison</legend>
+          <button type="button" data-comparison="greater-than">greater than</button>
+          <button type="button" data-comparison="less-than">less than</button>
+          <button type="button" data-comparison="equal-to">equal to</button>
+        </fieldset>
         <span id="numberTwo"></span>
       </div>
 

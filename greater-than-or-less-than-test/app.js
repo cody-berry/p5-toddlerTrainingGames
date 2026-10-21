@@ -1,6 +1,6 @@
 const numberOne = document.querySelector('#numberOne');
 const numberTwo = document.querySelector('#numberTwo');
-const comparison = document.querySelector('#comparison');
+const comparisonButtons = [...document.querySelectorAll('[data-comparison]')];
 const feedback = document.querySelector('#feedback');
 const nextPattern = document.querySelector('#nextPattern');
 
@@ -28,15 +28,25 @@ function makePattern() {
 
   numberOne.textContent = String(first);
   numberTwo.textContent = String(second);
-  comparison.value = '';
+  comparisonButtons.forEach(button => {
+    button.classList.remove('correct-choice', 'incorrect-choice');
+    button.disabled = false;
+  });
   feedback.textContent = '';
   feedback.className = '';
 }
 
-comparison.addEventListener('change', () => {
-  const isCorrect = comparison.value === correctRelationship;
-  feedback.textContent = isCorrect ? 'correct' : 'incorrect, try again';
-  feedback.className = isCorrect ? 'correct' : 'incorrect';
+comparisonButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const isCorrect = button.dataset.comparison === correctRelationship;
+    button.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
+    button.disabled = true;
+    if (isCorrect) {
+      comparisonButtons.forEach(choice => { choice.disabled = true; });
+    }
+    feedback.textContent = isCorrect ? 'correct' : 'incorrect, try again';
+    feedback.className = isCorrect ? 'correct' : 'incorrect';
+  });
 });
 
 nextPattern.addEventListener('click', makePattern);
