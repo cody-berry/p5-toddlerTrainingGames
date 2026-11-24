@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Microphone Tuner</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Microphone Tuner</h1>
+        <button id="microphoneButton" type="button">Start microphone</button>
+      </header>
+
+      <p id="status" role="status">Press Start microphone to begin.</p>
+
+      <section class="pitch-card" aria-labelledby="pitchHeading">
+        <div class="target-control">
+          <label for="targetNote">Target</label>
+          <select id="targetNote">
+            <option value="auto">Auto (nearest pitch)</option>
+          </select>
+        </div>
+
+        <h2 id="pitchHeading">Detected pitch</h2>
+        <div class="detected-note" id="detectedNote">—</div>
+        <div class="frequency" id="frequency">— Hz</div>
+
+        <div class="tuning-readout">
+          <span id="centsReadout">Waiting for audio</span>
+        </div>
+
+        <div class="note-ruler" id="noteRuler" aria-hidden="true"></div>
+
+        <div class="tuning-scale" id="tuningScale" role="button" tabindex="0" aria-label="Play a pitch from the tuning scale">
+          <div class="zone zone-low"></div>
+          <div class="zone zone-in-tune"></div>
+          <div class="zone zone-high"></div>
+          <div class="center-line"></div>
+          <div class="pitch-pin" id="pitchPin"></div>
+        </div>
+
+        <div class="cent-labels" aria-hidden="true">
+          <span>−1200¢</span>
+          <span>−600¢</span>
+          <span>0¢</span>
+          <span>+600¢</span>
+          <span>+1200¢</span>
+        </div>
+        <p class="scale-help" id="scaleHelp">Click anywhere on the scale to play that pitch as a sine wave.</p>
+      </section>
+
+      <section class="spectrum-card" aria-labelledby="spectrumHeading">
+        <div class="spectrum-title">
+          <h2 id="spectrumHeading">Fourier transform</h2>
+          <span>Frequency spectrum</span>
+        </div>
+        <canvas id="spectrum" width="1000" height="320"></canvas>
+        <div class="spectrum-labels" aria-hidden="true">
+          <span>50 Hz</span>
+          <span>100 Hz</span>
+          <span>500 Hz</span>
+          <span>1 kHz</span>
+          <span>5 kHz</span>
+          <span>10 kHz</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

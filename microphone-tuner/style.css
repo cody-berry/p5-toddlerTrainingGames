@@ -1,0 +1,212 @@
+:root {
+  color-scheme: dark;
+  --background: #050608;
+  --panel: #11141a;
+  --border: #303641;
+  --text: #f7f8fa;
+  --muted: #9da7b5;
+  --blue: #1769aa;
+  --blue-bright: #65b8ff;
+  --red: #7b2027;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+main {
+  width: min(1050px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+header,
+.spectrum-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+h1, h2, p { margin-top: 0; }
+h1 { margin-bottom: 0; font-size: clamp(25px, 4vw, 42px); }
+h2 { margin-bottom: 8px; font-size: 16px; color: var(--muted); }
+
+button,
+select {
+  border: 1px solid #515a69;
+  border-radius: 9px;
+  background: #191d25;
+  color: var(--text);
+  font: 650 15px/1 system-ui, sans-serif;
+}
+
+button { padding: 12px 18px; cursor: pointer; }
+button:hover { background: #252b36; }
+select { padding: 9px 34px 9px 10px; }
+
+#status {
+  min-height: 24px;
+  margin: 18px 0;
+  color: var(--muted);
+}
+
+.pitch-card,
+.spectrum-card {
+  position: relative;
+  padding: clamp(20px, 4vw, 36px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+}
+
+.target-control {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.detected-note {
+  font: 800 clamp(58px, 11vw, 104px)/1 ui-monospace, Consolas, monospace;
+  text-align: center;
+}
+
+.frequency,
+.tuning-readout {
+  color: var(--muted);
+  text-align: center;
+}
+
+.frequency { margin-top: 8px; font-size: 20px; }
+.tuning-readout { min-height: 24px; margin: 9px 0 28px; }
+
+.note-ruler,
+.cent-labels {
+  display: grid;
+  color: var(--muted);
+}
+
+.note-ruler {
+  grid-template-columns: repeat(25, minmax(0, 1fr));
+  align-items: end;
+  margin-bottom: 8px;
+  font: 600 clamp(8px, 1vw, 12px)/1 ui-monospace, Consolas, monospace;
+}
+.note-ruler span {
+  overflow: visible;
+  text-align: center;
+  white-space: nowrap;
+}
+.note-ruler .target-note { color: var(--text); font-size: 15px; font-weight: 800; }
+
+.tuning-scale {
+  position: relative;
+  height: 76px;
+  overflow: hidden;
+  border: 1px solid #596271;
+  border-radius: 12px;
+  cursor: pointer;
+  background:
+    repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent calc(4.1667% - 1px),
+      rgba(255,255,255,.28) calc(4.1667% - 1px),
+      rgba(255,255,255,.28) 4.1667%
+    ),
+    linear-gradient(
+      to right,
+      var(--blue) 0 25%,
+      var(--red) 25% 75%,
+      var(--blue) 75% 100%
+    ) 0 0 / 4.1667% 100% repeat-x;
+}
+
+.tuning-scale:focus-visible {
+  outline: 2px solid var(--blue-bright);
+  outline-offset: 3px;
+}
+
+.zone { position: absolute; top: 0; bottom: 0; }
+.zone { display: none; }
+
+.center-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: rgba(255,255,255,.65);
+  transform: translateX(-50%);
+}
+
+.pitch-pin {
+  position: absolute;
+  z-index: 2;
+  top: 7px;
+  bottom: 7px;
+  left: 50%;
+  width: 2px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.45), 0 0 8px rgba(255,255,255,.65);
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
+.pitch-pin.visible { opacity: 1; }
+
+.cent-labels {
+  grid-template-columns: repeat(5, 1fr);
+  margin-top: 8px;
+  font-size: 12px;
+}
+.cent-labels span { text-align: center; }
+.cent-labels span:first-child { text-align: left; }
+.cent-labels span:last-child { text-align: right; }
+
+.scale-help {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.spectrum-card { margin-top: 20px; }
+.spectrum-title h2 { margin-bottom: 0; color: var(--text); font-size: 20px; }
+.spectrum-title span { color: var(--muted); font-size: 13px; }
+
+#spectrum {
+  display: block;
+  width: 100%;
+  height: 250px;
+  margin-top: 18px;
+  border-radius: 10px;
+  background: #080a0e;
+}
+
+.spectrum-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 650px) {
+  header { align-items: flex-start; flex-direction: column; }
+  .target-control { position: static; justify-content: space-between; margin-bottom: 26px; }
+  .target-control select { max-width: 68%; }
+  #spectrum { height: 190px; }
+}
