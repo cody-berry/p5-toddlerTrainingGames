@@ -11,6 +11,12 @@ const shakeFill = document.querySelector('#shakeFill');
 const shakeGlass = document.querySelector('.shake-glass');
 const bubbles = [...document.querySelectorAll('.bubble')];
 const difficultySelect = document.querySelector('#difficulty');
+const phoneMode = document.querySelector('#phoneMode');
+const phoneAnswerForm = document.querySelector('#phoneAnswerForm');
+const phoneAnswer = document.querySelector('#phoneAnswer');
+const keyboardHint = document.querySelector('#keyboardHint');
+const highlightColumn = document.querySelector('#highlightColumn');
+let columnHighlighted = false;
 
 const DIFFICULTIES = {
   easy: { label: 'Easy', startingTime: 60, maximumTime: 80, failPenalty: 0, scoreMultiplier: 1.5 },
@@ -87,6 +93,9 @@ function render(justAdded = -1) {
 
   for (let i = 0; i < problem.width; i++) {
     const gridColumn = i + 2;
+    if (phoneMode.checked && columnHighlighted && i === column) {
+      html += `<div class="column-highlight" aria-hidden="true" style="grid-row:2 / ${resultRow + 1};grid-column:${gridColumn}"></div>`;
+    }
     const canBorrow = running && !transitioning && i > 0 && i <= column;
     const label = borrowed[i] ? 'Undo carry' : 'Carry';
     const button = i > 0
@@ -109,6 +118,10 @@ function render(justAdded = -1) {
   html += cell('−', 'operator', numbers.length + 1, 1);
   html += `<div class="line" style="grid-row:${lineRow};grid-column:1 / -1"></div>`;
   grid.innerHTML = html;
+  phoneAnswer.disabled = !running;
+  phoneAnswerForm.querySelector('button').disabled = !running || transitioning;
+  highlightColumn.disabled = !running || transitioning || columnHighlighted;
+  if (phoneAnswer.value !== typed) phoneAnswer.value = typed;
 }
 
 function setFeedback(message, isError = false) {
@@ -179,6 +192,7 @@ function stopCountdown() {
 }
 
 function timeUp() {
+  columnHighlighted = false;
   stopCountdown();
   window.clearTimeout(advanceTimer);
   running = false;
@@ -218,6 +232,7 @@ function changeTime(amount, bump = false) {
 }
 
 function resetGame() {
+  columnHighlighted = false;
   window.clearTimeout(advanceTimer);
   stopCountdown();
   const count = chosenCount() ?? 8;
@@ -249,6 +264,7 @@ function startOrToggle() {
       }
       loadProblem(startingNumbers(count));
       timeRemaining = difficultySettings().startingTime;
+      columnHighlighted = false;
       elapsedSeconds = 0;
       renderTimer();
     }
@@ -287,6 +303,7 @@ function submit() {
   }
 
   const previousColumn = column;
+  columnHighlighted = false;
   solvedDigits[column] = String(expected % 10);
   const nonzeroOperands = rows.filter(number => Number(number[column]) !== 0).length;
   let carryCount = 0;
@@ -330,10 +347,8 @@ function submit() {
   }, 430);
 }
 
-grid.addEventListener('click', event => {
-  const button = event.target.closest('.borrow-button');
-  if (!button || !running || transitioning) return;
-  const index = Number(button.dataset.column);
+function toggleCarry(index) {
+  if (!running || transitioning) return;
   if (index < 1 || index > column) return;
 
   if (borrowed[index]) {
@@ -355,10 +370,53 @@ grid.addEventListener('click', event => {
   borrowed[index] = !borrowed[index];
   setFeedback('');
   render();
+}
+
+grid.addEventListener('click', event => {
+  const button = event.target.closest('.borrow-button');
+  if (!button) return;
+  const index = Number(button.dataset.column);
+  toggleCarry(index);
   grid.querySelector(`[data-column="${index}"]`)?.focus();
 });
 
-startStop.addEventListener('click', startOrToggle);
+function updatePhoneMode() {
+  phoneAnswerForm.hidden = !phoneMode.checked;
+  keyboardHint.hidden = phoneMode.checked;
+  renderTimer();
+  render();
+  if (phoneMode.checked && running) phoneAnswer.focus();
+}
+
+phoneMode.addEventListener('change', updatePhoneMode);
+highlightColumn.addEventListener('click', () => {
+  if (!phoneMode.checked || !running || transitioning || columnHighlighted) return;
+  columnHighlighted = true;
+  changeTime(-2);
+  if (running) {
+    render();
+    phoneAnswer.focus();
+  }
+});
+phoneAnswer.addEventListener('input', () => {
+  if (!running || transitioning) {
+    phoneAnswer.value = typed;
+    return;
+  }
+  typed = phoneAnswer.value.replace(/[^0-9]/g, '').slice(0, 1);
+  setFeedback('');
+  render();
+});
+phoneAnswerForm.addEventListener('submit', event => {
+  event.preventDefault();
+  submit();
+  if (running) phoneAnswer.focus();
+});
+
+startStop.addEventListener('click', () => {
+  startOrToggle();
+  if (phoneMode.checked && running) phoneAnswer.focus();
+});
 resetButton.addEventListener('click', resetGame);
 difficultySelect.addEventListener('change', () => {
   const nextDifficulty = difficultySelect.value;
@@ -374,9 +432,15 @@ difficultySelect.addEventListener('change', () => {
 startingCount.addEventListener('keydown', event => event.stopPropagation());
 
 window.addEventListener('keydown', event => {
+  if (phoneMode.checked || event.target === phoneMode) return;
   if (!running || transitioning) return;
 
-  if (/^[0-9]$/.test(event.key)) {
+  if (!event.metaKey && (event.code === 'KeyC' || event.key.toLowerCase() === 'c')) {
+    event.preventDefault();
+    if (event.repeat) return;
+    const offset = Number(event.shiftKey) + Number(event.altKey) + Number(event.ctrlKey);
+    toggleCarry(column - offset);
+  } else if (/^[0-9]$/.test(event.key)) {
     event.preventDefault();
     typed = event.key;
     setFeedback('');
@@ -393,3 +457,4 @@ window.addEventListener('keydown', event => {
 });
 
 resetGame();
+updatePhoneMode();

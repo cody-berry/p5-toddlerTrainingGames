@@ -53,6 +53,7 @@
           <button id="startStop" type="button">Start</button>
           <button id="reset" type="button">Reset</button>
         </div>
+        <label class="phone-toggle"><input id="phoneMode" type="checkbox" /> Phone mode</label>
       </div>
 
       <p class="instruction" id="instruction">Choose how many numbers, then press Start</p>
@@ -61,7 +62,13 @@
         <div class="number-grid" id="numberGrid"></div>
       </section>
 
-      <p class="hint">Type the answer, then press Enter</p>
+      <form id="phoneAnswerForm" class="phone-answer" hidden>
+        <label for="phoneAnswer">Column answer</label>
+        <input id="phoneAnswer" type="text" inputmode="numeric" autocomplete="off" enterkeyhint="done" />
+        <button type="submit">Submit</button>
+        <button id="highlightColumn" type="button">Highlight column (−2s)</button>
+      </form>
+      <p class="hint" id="keyboardHint">Type the answer, then press Enter</p>
       <p class="feedback" id="feedback" aria-live="assertive"></p>
     </main>
 

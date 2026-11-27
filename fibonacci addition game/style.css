@@ -313,6 +313,51 @@ h1 {
 .feedback.error { color: #ff595e; }
 .typed { color: var(--white); }
 
+.controls .phone-toggle {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls .phone-toggle input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
+.phone-answer[hidden] { display: none; }
+.phone-answer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font: 600 16px system-ui, sans-serif;
+}
+
+.phone-answer input,
+.phone-answer button {
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 1px solid #777;
+  border-radius: 8px;
+  background: #111;
+  color: var(--white);
+  font: inherit;
+}
+
+.phone-answer input { width: 6ch; }
+.phone-answer :disabled { opacity: .55; }
+
+.column-highlight {
+  align-self: stretch;
+  background: #145994;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
 .shake { animation: shake 420ms ease-in-out; }
 .celebrate .result { color: var(--success); }
 

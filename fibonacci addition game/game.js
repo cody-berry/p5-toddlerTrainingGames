@@ -11,6 +11,12 @@ const shakeFill = document.querySelector('#shakeFill');
 const shakeGlass = document.querySelector('.shake-glass');
 const bubbles = [...document.querySelectorAll('.bubble')];
 const difficultySelect = document.querySelector('#difficulty');
+const phoneMode = document.querySelector('#phoneMode');
+const phoneAnswerForm = document.querySelector('#phoneAnswerForm');
+const phoneAnswer = document.querySelector('#phoneAnswer');
+const keyboardHint = document.querySelector('#keyboardHint');
+const highlightColumn = document.querySelector('#highlightColumn');
+let columnHighlighted = false;
 
 const DIFFICULTIES = {
   easy: { label: 'Easy', startingTime: 60, maximumTime: 80, failPenalty: 0, scoreMultiplier: 1.5 },
@@ -71,6 +77,9 @@ function render(justAdded = -1) {
 
   for (let i = 0; i < problem.width; i++) {
     const gridColumn = i + 2;
+    if (phoneMode.checked && columnHighlighted && i === column) {
+      html += `<div class="column-highlight" aria-hidden="true" style="grid-row:2 / ${resultRow + 1};grid-column:${gridColumn}"></div>`;
+    }
     const shownCarry = i === column && carry ? carry : '';
     html += cell(shownCarry, 'carry', 1, gridColumn);
 
@@ -91,6 +100,10 @@ function render(justAdded = -1) {
   html += cell('+', 'operator', numbers.length + 1, 1);
   html += `<div class="line" style="grid-row:${lineRow};grid-column:1 / -1"></div>`;
   grid.innerHTML = html;
+  phoneAnswer.disabled = !running;
+  phoneAnswerForm.querySelector('button').disabled = !running || transitioning;
+  highlightColumn.disabled = !running || transitioning || columnHighlighted;
+  if (phoneAnswer.value !== typed) phoneAnswer.value = typed;
 }
 
 function setFeedback(message, isError = false) {
@@ -161,6 +174,7 @@ function stopCountdown() {
 }
 
 function timeUp() {
+  columnHighlighted = false;
   stopCountdown();
   window.clearTimeout(advanceTimer);
   running = false;
@@ -200,6 +214,7 @@ function changeTime(amount, bump = false) {
 }
 
 function resetGame() {
+  columnHighlighted = false;
   window.clearTimeout(advanceTimer);
   stopCountdown();
   const count = chosenCount() ?? 2;
@@ -239,6 +254,7 @@ function startOrToggle() {
       typed = '';
       solvedDigits = [];
       timeRemaining = difficultySettings().startingTime;
+      columnHighlighted = false;
       elapsedSeconds = 0;
       renderTimer();
     }
@@ -277,6 +293,7 @@ function submit() {
   }
 
   const previousColumn = column;
+  columnHighlighted = false;
   solvedDigits[column] = String(expected % 10);
   const nonzeroAddends = rows.filter(number => Number(number[column]) !== 0).length;
   const earnedTime = ((Math.floor(expected / 10) * 2) + 1) * Math.max(nonzeroAddends, 1);
@@ -309,7 +326,43 @@ function submit() {
   }, 430);
 }
 
-startStop.addEventListener('click', startOrToggle);
+function updatePhoneMode() {
+  phoneAnswerForm.hidden = !phoneMode.checked;
+  keyboardHint.hidden = phoneMode.checked;
+  renderTimer();
+  render();
+  if (phoneMode.checked && running) phoneAnswer.focus();
+}
+
+phoneMode.addEventListener('change', updatePhoneMode);
+highlightColumn.addEventListener('click', () => {
+  if (!phoneMode.checked || !running || transitioning || columnHighlighted) return;
+  columnHighlighted = true;
+  changeTime(-2);
+  if (running) {
+    render();
+    phoneAnswer.focus();
+  }
+});
+phoneAnswer.addEventListener('input', () => {
+  if (!running || transitioning) {
+    phoneAnswer.value = typed;
+    return;
+  }
+  typed = phoneAnswer.value.replace(/[^0-9]/g, '');
+  setFeedback('');
+  render();
+});
+phoneAnswerForm.addEventListener('submit', event => {
+  event.preventDefault();
+  submit();
+  if (running) phoneAnswer.focus();
+});
+
+startStop.addEventListener('click', () => {
+  startOrToggle();
+  if (phoneMode.checked && running) phoneAnswer.focus();
+});
 resetButton.addEventListener('click', resetGame);
 difficultySelect.addEventListener('change', () => {
   const nextDifficulty = difficultySelect.value;
@@ -325,6 +378,7 @@ difficultySelect.addEventListener('change', () => {
 startingCount.addEventListener('keydown', event => event.stopPropagation());
 
 window.addEventListener('keydown', event => {
+  if (phoneMode.checked || event.target === phoneMode) return;
   if (!running || transitioning) return;
 
   if (/^[0-9]$/.test(event.key)) {
@@ -343,3 +397,4 @@ window.addEventListener('keydown', event => {
 });
 
 resetGame();
+updatePhoneMode();
