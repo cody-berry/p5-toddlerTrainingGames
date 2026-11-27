@@ -1,0 +1,15 @@
+.borrow-control { display: grid; place-items: center; }
+.borrow-button {
+  padding: 4px 2px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: #111;
+  color: var(--white);
+  font: 700 11px system-ui, sans-serif;
+  cursor: pointer;
+}
+.borrow-button:disabled { opacity: .45; cursor: default; }
+.addition { max-width: 100%; overflow-x: auto; }
+.game { grid-template-columns: minmax(0, 1fr); }
+.controls { max-width: 100%; }
+.digit { font-size: clamp(24px, 5vw, 52px); }

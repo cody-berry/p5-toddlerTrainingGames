@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fibonacci Subtraction Game</title>
+    <link rel="stylesheet" href="../fibonacci%20addition%20game/style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <aside class="time-hud" aria-label="Game timers">
+      <div class="stopwatch" id="stopwatch" aria-live="off" aria-label="Elapsed time">00:00</div>
+      <div class="milkshake" id="milkshake" aria-hidden="true">
+        <div class="straw"></div>
+        <div class="shake-glass">
+          <span class="pitcher-ellipse pitcher-top-back"></span>
+          <span class="pitcher-ellipse pitcher-bottom-back"></span>
+          <div class="shake-fill" id="shakeFill">
+            <span class="shake-body"></span>
+            <span class="fill-surface-front"></span>
+          </div>
+          <span class="bubble bubble-one"></span>
+          <span class="bubble bubble-two"></span>
+          <span class="bubble bubble-three"></span>
+          <span class="bubble bubble-four"></span>
+          <span class="bubble bubble-five"></span>
+          <span class="bubble bubble-six"></span>
+          <span class="bubble bubble-seven"></span>
+          <span class="bubble bubble-eight"></span>
+          <span class="bubble bubble-nine"></span>
+          <span class="bubble bubble-ten"></span>
+          <span class="bubble bubble-eleven"></span>
+          <span class="bubble bubble-twelve"></span>
+          <div class="pitcher-walls"></div>
+          <span class="pitcher-ellipse pitcher-top-front"></span>
+          <span class="pitcher-ellipse pitcher-bottom-front"></span>
+        </div>
+      </div>
+      <div class="countdown" id="timer" aria-live="polite" aria-label="Milkshake time remaining">60</div>
+    </aside>
+    <main class="game" aria-labelledby="title">
+      <h1 id="title">Fibonacci Subtraction</h1>
+      <div class="controls">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+          <option value="supreme">Supreme</option>
+        </select>
+        <label for="startingCount">Starting Fibonacci index</label>
+        <input id="startingCount" type="number" min="3" max="100" step="1" value="8" inputmode="numeric" />
+        <div class="buttons">
+          <button id="startStop" type="button">Start</button>
+          <button id="reset" type="button">Reset</button>
+        </div>
+      </div>
+
+      <p class="instruction" id="instruction">Choose a difficulty and starting Fibonacci index</p>
+
+      <section class="addition" id="addition" aria-label="Subtraction problem">
+        <div class="number-grid" id="numberGrid"></div>
+      </section>
+
+      <p class="hint">Type one digit, then press Enter</p>
+      <p class="feedback" id="feedback" aria-live="assertive"></p>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
